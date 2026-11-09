@@ -22,9 +22,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Castor
-        run: |
-          sudo curl -fsSL --retry 5 -o /usr/local/bin/castor https://github.com/jolicode/castor/releases/latest/download/castor.linux-amd64
-          sudo chmod +x /usr/local/bin/castor
+        uses: castor-php/setup-castor@2a495b8c91f00be6768ad8a040ba8634c797d386 # v1.1.0
 
       - name: Publish the latest Castor release
         run: castor binary:publish
