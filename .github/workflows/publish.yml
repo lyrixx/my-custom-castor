@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      # gh reads it, and static-php-cli needs it against the GitHub API rate limit.
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Castor
+        run: |
+          sudo curl -fsSL --retry 5 -o /usr/local/bin/castor https://github.com/jolicode/castor/releases/latest/download/castor.linux-amd64
+          sudo chmod +x /usr/local/bin/castor
+
+      - name: Publish the latest Castor release
+        run: castor binary:publish
+
+      - name: Keep the schedule alive
+        run: castor binary:keep-schedule-alive
